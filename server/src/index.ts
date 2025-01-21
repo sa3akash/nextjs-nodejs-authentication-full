@@ -2,7 +2,7 @@ import express from 'express';
 import { SetupServer } from '@root/app';
 import { config } from '@root/config';
 import { dbConnect } from '@root/dbConnect';
-import {IUserDocument} from "@root/modules/users/users.interface";
+import { IUserDocument } from '@root/modules/users/users.interface';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

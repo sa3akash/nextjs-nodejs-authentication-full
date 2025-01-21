@@ -27,7 +27,10 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
       type: String,
       default: null
     },
-
+    isVerified: {
+      type: Date,
+      default: null
+    },
     resetToken: {
       type: String,
       default: null

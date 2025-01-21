@@ -1,5 +1,5 @@
 import express from 'express';
-import {UsersController} from "@root/modules/users/users.controllers";
+import { UsersController } from '@root/modules/users/users.controllers';
 
 class UsersRoute {
   private readonly router: express.Router;
@@ -8,8 +8,9 @@ class UsersRoute {
   }
 
   public routes(): express.Router {
-    this.router.post('/register', UsersController.prototype.register);
-    this.router.post('/register', UsersController.prototype.login);
+    this.router.post('/signup', UsersController.prototype.register);
+    this.router.post('/verify', UsersController.prototype.verifyEmail);
+    this.router.post('/signin', UsersController.prototype.login);
 
     return this.router;
   }

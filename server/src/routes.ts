@@ -1,6 +1,5 @@
 import { Application } from 'express';
-import {usersRoute} from "@root/modules/users/users.route";
-
+import { usersRoute } from '@root/modules/users/users.route';
 
 export default (app: Application) => {
   const routes = () => {
