@@ -14,6 +14,7 @@ class UsersRoute {
     this.router.post('/signin', UsersController.prototype.login);
     this.router.get('/google/login', passport.authenticate('google', { scope: ['email', 'profile'] }));
     this.router.get('/google/callback', passport.authenticate('google', { session: false }), UsersController.prototype.googleCallback);
+    this.router.get('/all', UsersController.prototype.getAll);
 
     return this.router;
   }

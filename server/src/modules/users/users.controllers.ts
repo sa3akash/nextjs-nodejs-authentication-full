@@ -4,6 +4,7 @@ import { SignInSchema, SignUpSchema } from '@root/modules/users/users.schema';
 import { usersService } from '@services/db/users.service';
 import { ServerError } from 'error-express';
 import { auth } from '@middleware/auth';
+import { userModel } from '@root/modules/users/users.model';
 
 export class UsersController {
   @joiValidation(SignUpSchema)
@@ -39,5 +40,11 @@ export class UsersController {
 
 
     res.json({ message: 'ok'});
+  }
+
+  @auth()
+  public async getAll(req:Request,res:Response){
+    const all = await userModel.find();
+    res.json(all);
   }
 }
