@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { joiValidation } from '@middleware/joiValidation';
-import { SignUpSchema } from '@root/modules/users/users.schema';
+import { SignInSchema, SignUpSchema } from '@root/modules/users/users.schema';
 import { usersService } from '@services/db/users.service';
 import { ServerError } from 'error-express';
+import { auth } from '@middleware/auth';
 
 export class UsersController {
   @joiValidation(SignUpSchema)
@@ -25,8 +26,18 @@ export class UsersController {
     });
   }
 
+  @joiValidation(SignInSchema)
   public async login(req: Request, res: Response) {
     const data = await usersService.loginUser(req);
     res.status(200).json(data);
+
+  }
+
+  public async googleCallback(req: Request, res: Response){
+
+    console.log('google user',req.user);
+
+
+    res.json({ message: 'ok'});
   }
 }

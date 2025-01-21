@@ -6,6 +6,7 @@ class Config {
   public PORT = process.env.PORT;
   public NODE_ENV = process.env.NODE_ENV;
   public JWT_SECRET = process.env.JWT_SECRET;
+  public JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET;
   public JWT_SECRET_REFRESH = process.env.JWT_SECRET_REFRESH;
   public DATABASE_URL = process.env.DATABASE_URL;
   public CLIENT_URL = process.env.CLIENT_URL;
@@ -16,6 +17,8 @@ class Config {
   public SENDER_EMAIL = process.env.SENDER_EMAIL;
   public SENDER_EMAIL_PASSWORD = process.env.SENDER_EMAIL_PASSWORD;
   public REDIS_URL = process.env.REDIS_URL;
+  public GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+  public GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
   public validateConfig(): void {
     for (const [key, value] of Object.entries(this)) {

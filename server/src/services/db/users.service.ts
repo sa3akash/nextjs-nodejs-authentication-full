@@ -22,7 +22,7 @@ class UsersService {
     if (user) throw new ServerError('User already exists', 400);
     const newUser = await userModel.create(data);
 
-    const jwtToken = jwtService.signToken({ userId: `${newUser._id}` });
+    const jwtToken = jwtService.signVerifyToken({ userId: `${newUser._id}` });
 
     const template: string = emailTemplates.verifyEmail('http://localhost:3000/verify?token=' + jwtToken);
 
@@ -34,7 +34,7 @@ class UsersService {
   }
 
   public async verifyEmailAddress(token: string): Promise<void> {
-    const payload = jwtService.verifyToken(token) as { userId: string };
+    const payload = jwtService.verifyVerifyToken(token) as { userId: string };
 
     if (!payload) throw new ServerError('Invalid token', 401);
 
@@ -52,7 +52,7 @@ class UsersService {
     }
 
     if (!user.isVerified) {
-      const jwtToken = jwtService.signToken({ userId: `${user._id}` });
+      const jwtToken = jwtService.signVerifyToken({ userId: `${user._id}` });
 
       const template: string = emailTemplates.verifyEmail('http://localhost:3000/verify?token=' + jwtToken);
 
@@ -67,6 +67,10 @@ class UsersService {
         message: 'Check your email address and verify your account.'
       };
     }
+
+    const ip = req.ip || req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    const userAgent = req.headers["user-agent"];
+
 
     const accessToken = jwtService.signToken({ userId: `${user._id}` });
     const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });

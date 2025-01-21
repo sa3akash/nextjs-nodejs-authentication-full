@@ -6,6 +6,9 @@ export interface IUserDocument {
   name: string; // Unique username
   email: string; // Unique email
   password: string; // Hashed password
+  googleId: string; // googleId
+  provider: string; // googleId
+  githubId: string; // githubId
   profilePicture: string; // URL to profile picture     // Short user bio     // Timestamp of account creation
   updatedAt: string | Date; // Timestamp of last update     // Timestamp of last login
   role: Role; // Array of roles (e.g., ["user", "admin"])

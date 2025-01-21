@@ -7,6 +7,7 @@ import hpp from 'hpp';
 import http from 'http';
 import os from 'os';
 import cookieParser from 'cookie-parser';
+import passport from '@root/passport';
 
 import { config } from '@root/config';
 import mainRoute from '@root/routes';
@@ -30,13 +31,14 @@ export class SetupServer {
     app.set('trust proxy', 1);
     app.use(
       cors({
-        origin: (requestOrigin, callback) => {
-          const allowedOrigins = [config.CLIENT_URL!];
-          if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
-            throw new ServerError('Request block by cors', 400);
-          }
-          callback(null, allowedOrigins); // allowedOrigin or true
-        },
+        // origin: (requestOrigin, callback) => {
+        //   const allowedOrigins = [config.CLIENT_URL!];
+        //   if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
+        //     throw new ServerError('Request block by cors', 400);
+        //   }
+        //   callback(null, allowedOrigins); // allowedOrigin or true
+        // },
+        origin: "http://localhost:5500",
         credentials: true,
         optionsSuccessStatus: 204,
         maxAge: 6000,
@@ -52,6 +54,7 @@ export class SetupServer {
     app.use(compression());
     app.use(express.json({ limit: '100MB' }));
     app.use(express.urlencoded({ extended: true, limit: '500MB' }));
+    app.use(passport.initialize());
   }
 
   private routesMiddleware(app: Application): void {

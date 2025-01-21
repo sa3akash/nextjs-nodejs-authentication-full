@@ -6,9 +6,8 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
   {
     email: {
       type: String,
-      required: true,
       unique: true,
-      index: true
+      index: true,
     },
     role: {
       type: String,
@@ -19,9 +18,21 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
       type: String,
       required: true
     },
+    googleId: {
+      type: String,
+      default: null
+    },
+    githubId: {
+      type: String,
+      default: null
+    },
+    provider: {
+      type: String,
+      default: null
+    },
     password: {
       type: String,
-      required: true
+      default: null
     },
     profilePicture: {
       type: String,
@@ -52,7 +63,7 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
     timestamps: true,
     toJSON: {
       transform(doc, ret) {
-        delete ret.passwordHash;
+        delete ret.password;
         return ret;
       }
     }
@@ -60,8 +71,10 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
 );
 
 UserSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+  if(this.password){
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+  }
 });
 
 UserSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
