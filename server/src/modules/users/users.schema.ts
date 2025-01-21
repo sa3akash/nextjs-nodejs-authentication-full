@@ -12,12 +12,6 @@ export const SignUpSchema: ObjectSchema = Joi.object().keys({
     'string.email': 'Email must be valid.',
     'string.empty': 'Email is a required field.'
   }),
-  phoneNumber: Joi.string().required().min(10).messages({
-    'string.base': 'Phone number must be of type string.',
-    'string.email': 'Phone number must be valid.',
-    'string.empty': 'Phone number is a required field.',
-    'string.min': 'Phone number invalid'
-  }),
   password: Joi.string().required().messages({
     'string.base': 'Password must be of type string.',
     'string.email': 'Password must be valid.',

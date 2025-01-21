@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { IUserDocument } from '@admin/interfaces/auth.interface';
+import { IUserDocument } from '@root/modules/users/users.interface';
 
 const UserSchema = new mongoose.Schema<IUserDocument>(
   {
@@ -12,14 +12,10 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
     },
     role: {
       type: String,
-      enum: ['admin', 'teacher', 'student', 'moderator'],
-      default: 'student'
+      enum: ['admin', 'moderator', 'user'],
+      default: 'user'
     },
     name: {
-      type: String,
-      required: true
-    },
-    phoneNumber: {
       type: String,
       required: true
     },
@@ -27,16 +23,33 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
       type: String,
       required: true
     },
-    resetPasswordToken: {
+    profilePicture: {
       type: String,
-      default: ''
+      default: null
+    },
+
+    resetToken: {
+      type: String,
+      default: null
+    },
+    resetTokenExpires: {
+      type: Date,
+      default: null
+    },
+    twoFactorEnabled: {
+      type: Boolean,
+      default: false
+    },
+    twoFactorSecret: {
+      type: String,
+      default: null
     }
   },
   {
     timestamps: true,
     toJSON: {
       transform(doc, ret) {
-        delete ret.password;
+        delete ret.passwordHash;
         return ret;
       }
     }
@@ -57,4 +70,4 @@ UserSchema.methods.hashPassword = async function (password: string): Promise<str
   return await bcrypt.hash(password, 10);
 };
 
-export const userModel = mongoose.model('User', UserSchema, 'User');
+export const userModel = mongoose.model('User', UserSchema, 'users');

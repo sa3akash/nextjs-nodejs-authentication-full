@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { jwtService } from '@services/utils/jwt.services';
-import { adminService } from '@services/db/admin.service';
+import { adminService } from '@services/db/users.service';
 import { ServerError } from 'error-express';
 
-export type Role = 'admin' | 'student' | 'teacher' | 'moderator';
+export type Role = 'admin' | 'moderator' | 'user';
 
 export function auth(...roles: Role[]): MethodDecorator {
   return (target, key, descriptor: PropertyDescriptor) => {
