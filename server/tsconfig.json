@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "CommonJS",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@services/*": ["src/services/*"],
+      "@admin/*": ["src/modules/admin/*"],
+      "@teacher/*": ["src/modules/teacher/*"],
+      "@student/*": ["src/modules/student/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@root/*": ["src/*"]
+    }
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
