@@ -31,14 +31,14 @@ export class SetupServer {
     app.set('trust proxy', 1);
     app.use(
       cors({
-        // origin: (requestOrigin, callback) => {
-        //   const allowedOrigins = [config.CLIENT_URL!];
-        //   if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
-        //     throw new ServerError('Request block by cors', 400);
-        //   }
-        //   callback(null, allowedOrigins); // allowedOrigin or true
-        // },
-        origin: "http://localhost:5500",
+        origin: (requestOrigin, callback) => {
+          const allowedOrigins = [config.CLIENT_URL!];
+          if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
+            throw new ServerError('Request block by cors', 400);
+          }
+          callback(null, allowedOrigins); // allowedOrigin or true
+        },
+
         credentials: true,
         optionsSuccessStatus: 204,
         maxAge: 6000,
