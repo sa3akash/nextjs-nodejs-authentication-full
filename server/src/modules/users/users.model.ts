@@ -6,8 +6,7 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
   {
     email: {
       type: String,
-      unique: true,
-      index: true,
+      default: null
     },
     role: {
       type: String,

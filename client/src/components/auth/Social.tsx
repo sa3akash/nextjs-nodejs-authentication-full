@@ -20,19 +20,21 @@ const Social = ({ type }: Props) => {
             </span>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <a href={`${configEnv.URL}/api/v1/auth/google/login`} className={cn(buttonVariants({variant: "outline"}),"w-full")}>
+        <a href={`${configEnv.URL}/api/v1/auth/google/login`}
+           className={cn(buttonVariants({ variant: 'outline' }), 'w-full')}>
           <Icons.google />
           Login with Google
         </a>
-        <Button variant="outline" className="w-full">
+        <a href={`${configEnv.URL}/api/v1/auth/github/login`}
+           className={cn(buttonVariants({ variant: 'outline' }), 'w-full')}>
           <Icons.gitHub />
           Login with Github
-        </Button>
+        </a>
       </div>
 
-      {type === "SignIn" ? (
+      {type === 'SignIn' ? (
         <div className="text-center text-sm">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an account?{' '}
           <Link href="/signup" className="underline underline-offset-4">
             Sign up
           </Link>

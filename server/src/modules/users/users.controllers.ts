@@ -33,12 +33,22 @@ export class UsersController {
   @joiValidation(SignInSchema)
   public async login(req: Request, res: Response) {
     const data = await usersService.loginUser(req);
-    console.log(data);
 
     res.status(200).json(data);
   }
 
   public async googleCallback(req: Request, res: Response) {
+    const user = req.user as unknown as IUserDocument;
+
+    const accessToken = jwtService.signToken({ userId: `${user._id}` });
+    const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });
+
+    const url = `${config.CLIENT_URL}/api/auth?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${user?._id}&name=${user.name}&email=${user.email}&role=${user.role}&isVerified=${user.isVerified}&profilePicture=${user.profilePicture}`;
+
+    res.redirect(url);
+  }
+
+  public async githubCallback(req: Request, res: Response) {
     const user = req.user as IUserDocument;
 
     const accessToken = jwtService.signToken({ userId: `${user._id}` });

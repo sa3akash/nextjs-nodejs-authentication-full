@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/store/useAuth';
 const RootProviders = ({children}:PropsWithChildren) => {
   const {setLoading,setSession} = useAuth()
   useEffect(()=>{
+    setLoading(true);
     updateUser().then(data=>{
       setSession(data);
       setLoading(false);

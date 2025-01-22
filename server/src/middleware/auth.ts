@@ -1,33 +1,43 @@
 import { NextFunction, Request, Response } from 'express';
 import { ServerError } from 'error-express';
-import passport from '@root/passport';
-import { IUserDocument } from '@root/modules/users/users.interface';
+import { userModel } from '@root/modules/users/users.model';
+import { jwtService } from '@services/utils/jwt.services';
 
 export type Role = 'admin' | 'moderator' | 'user';
 
 export function auth(...roles: Role[]): MethodDecorator {
-  return (target, key, descriptor: PropertyDescriptor) => {
+  return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
-    descriptor.value = function (...args: any[]): Promise<any> {
+    descriptor.value = async function (...args: any[]) {
       const [req, res, next] = args as [Request, Response, NextFunction];
 
-      // Authenticate the user using passport
-      return new Promise((resolve, reject) => {
-        passport.authenticate('jwt', { session: false }, (err: any, user: IUserDocument, info: any) => {
-          if (err || !user) {
-            throw new ServerError('Unauthorized', 401);
-          }
-          // Assign the user to the request object
-          req.user = user;
-          // Role check
-          if (roles.length > 0 && (!user.role || !roles.includes(user.role))) {
-            return next(new ServerError('Forbidden: Insufficient permissions', 403)); // Use 403 for forbidden access
-          }
-          // Call the original method
-          resolve(originalMethod.apply(this, args));
-        })(req, res, next); // Call the authenticate function
-      });
+      const token = req.headers.authorization?.split(' ')[1] || req.cookies?.accessToken;
+
+      if (!token) {
+        throw new ServerError('Unauthorized: No token provided', 401);
+      }
+
+      const tokenUser = jwtService.verifyToken(token) as { userId: string };
+
+      if (!tokenUser) {
+        throw new ServerError('Unauthorized: Invalid token', 401);
+      }
+
+      const userInDB = await userModel.findById(tokenUser.userId);
+
+      if (!userInDB) {
+        throw new ServerError('Unauthorized: User not found', 404);
+      }
+
+      req.user = userInDB;
+
+      if (roles.length > 0 && !roles.includes(userInDB.role)) {
+        throw new ServerError('Forbidden: Insufficient permissions', 403); // Use 403 for forbidden access
+      }
+
+      // Call the original method with the updated context
+      return await originalMethod.apply(this, args);
     };
 
     return descriptor;

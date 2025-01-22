@@ -5,7 +5,7 @@ import { ServerError } from 'error-express';
 class JwtService {
   public signToken(data: { userId: string; sessionId?: string }, expire?: string): string {
     return jwt.sign(data, config.JWT_SECRET!, {
-      expiresIn: expire || '1h'
+      expiresIn: expire || '15m'
     });
   }
 
@@ -46,7 +46,7 @@ class JwtService {
       return jwt.verify(token, config.JWT_TOKEN_SECRET!);
     } catch (err) {
       if (err instanceof JsonWebTokenError) {
-        throw new ServerError(err?.message, 401);
+        throw new ServerError(err?.message, 403);
       }
     }
   }

@@ -3,7 +3,6 @@ import "server-only";
 import { headers } from "next/headers";
 import { configEnv } from "@/lib/config";
 import { getSession, updateTokens } from "@/lib/session";
-import { redirect } from "next/navigation";
 
 interface ApiProps {
   body?: BodyInit | null;
@@ -53,11 +52,10 @@ export const requestApi = async <T = any>(
     return {
       ...data,
       isError: true,
-      statusCode: response.status, // Capture the HTTP status code
     } as FetchError;
   }
 
-  return data as T; // Return the resolved data as type T
+  return data as T;
 };
 
 // Modified api function

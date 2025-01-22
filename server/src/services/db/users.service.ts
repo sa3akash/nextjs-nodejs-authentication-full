@@ -38,6 +38,12 @@ class UsersService {
 
     if (!payload) throw new ServerError('Invalid token', 401);
 
+    const user = await this.getUserById(payload.userId);
+
+    if(user?.isVerified){
+      throw new ServerError('User already verified', 400);
+    }
+
     await userModel.findByIdAndUpdate(payload.userId, {
       $set: {
         isVerified: Date.now()

@@ -15,13 +15,18 @@ export const updateUser = async () => {
   const data = await api("/auth/getUser", {
     method: "GET",
     headers: {
-      authorization: `Bearer ${session?.accessToken}`,
+      authorization: session?.accessToken
+        ? `Bearer ${session?.accessToken}`
+        : "",
     },
   });
 
   if (data.isError) {
+    if (data.statusCode === 401) {
+      redirect("/signin");
+    }
     await deleteSession();
-    redirect("/signin");
+    return null;
   }
 
   const sessionData: SessionType = {

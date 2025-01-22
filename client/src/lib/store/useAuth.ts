@@ -9,18 +9,25 @@ interface AuthState {
   setLoading: (isLoading: boolean) => void;
 }
 
-export const useAuth = create(
-  persist<AuthState>(
-    (set, get) => ({
-      loading: true,
-      setLoading: (isLoading) => set((state) => ({ loading: isLoading })),
-      session: null,
-      setSession: (data: SessionType | null) =>
-        set((state) => ({ session: data })),
-    }),
-    {
-      name: "auth-storage",
-      storage: createJSONStorage(() => sessionStorage),
-    },
-  ),
-);
+export const useAuth = create<AuthState>((set, get) => ({
+  loading: false,
+  setLoading: (isLoading) => set((state) => ({ loading: isLoading })),
+  session: null,
+  setSession: (data: SessionType | null) => set((state) => ({ session: data })),
+}));
+
+// export const useAuth = create(
+//   persist<AuthState>(
+//     (set, get) => ({
+//       loading: true,
+//       setLoading: (isLoading) => set((state) => ({ loading: isLoading })),
+//       session: null,
+//       setSession: (data: SessionType | null) =>
+//         set((state) => ({ session: data })),
+//     }),
+//     {
+//       name: "auth-storage",
+//       storage: createJSONStorage(() => sessionStorage),
+//     },
+//   ),
+// );

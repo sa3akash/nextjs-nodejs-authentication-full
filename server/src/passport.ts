@@ -4,6 +4,7 @@ import { config } from '@root/config';
 import { usersService } from '@services/db/users.service';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { userModel } from '@root/modules/users/users.model';
+import { Strategy as GitHubStrategy } from 'passport-github';
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -28,7 +29,7 @@ passport.use(
     {
       clientID: config.GOOGLE_CLIENT_ID!,
       clientSecret: config.GOOGLE_CLIENT_SECRET!,
-      callbackURL: 'http://localhost:5500/api/v1/auth/google/callback' // Adjust based on your route
+      callbackURL: '/api/v1/auth/google/callback' // Adjust based on your route
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -41,6 +42,40 @@ passport.use(
 
         const newUser = await userModel.create({
           googleId: profile.id,
+          name: profile.displayName,
+          email,
+          provider: profile.provider,
+          profilePicture,
+          isVerified: Date.now()
+        });
+
+        return done(null, newUser);
+      } catch (error) {
+        return done(error, false, { message: 'Field to login' });
+      }
+    }
+  )
+);
+
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: config.GITHUB_CLIENT_ID!,
+      clientSecret: config.GITHUB_CLIENT_SECRET!,
+      callbackURL: '/api/v1/auth/github/callback' // Adjust based on your route
+    },
+
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const email = (profile as any).email;
+        const profilePicture = (profile as any).avatar_url || profile.photos![0].value;
+        //
+        // // Find or create user in your database
+        const user = await userModel.findOne({ $or: [{ githubId: profile.id }, { email: email }] });
+        if (user) return done(null, user);
+        //
+        const newUser = await userModel.create({
+          githubId: profile.id,
           name: profile.displayName,
           email,
           provider: profile.provider,

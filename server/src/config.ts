@@ -19,6 +19,8 @@ class Config {
   public REDIS_URL = process.env.REDIS_URL;
   public GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
   public GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+  public GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+  public GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 
   public validateConfig(): void {
     for (const [key, value] of Object.entries(this)) {
