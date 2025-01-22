@@ -8,7 +8,7 @@
 export class FetchError extends Error {
   public constructor(
     public statusCode: number,
-    public message: string
+    public message: string,
   ) {
     super(message); // Call the parent class constructor
 
@@ -16,7 +16,6 @@ export class FetchError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
-
 
 /**
  * Type for search parameters that can be passed in a request.
@@ -37,7 +36,6 @@ export type TypeSearchParams = {
     | Array<string | number | boolean | undefined>;
 };
 
-
 /**
  * Interface for request options, extending the standard RequestInit.
  *
@@ -49,7 +47,6 @@ export interface RequestOptions extends RequestInit {
   headers?: Record<string, string>;
   params?: TypeSearchParams;
 }
-
 
 /**
  * Type for request configuration, which may include parameters and additional options.

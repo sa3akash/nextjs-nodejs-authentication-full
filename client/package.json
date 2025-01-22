@@ -6,6 +6,7 @@
     "dev": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
+    "fix": "prettier --write \"src/**/*.{ts,json}\"",
     "lint": "next lint"
   },
   "dependencies": {

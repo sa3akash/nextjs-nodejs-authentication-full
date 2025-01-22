@@ -2,7 +2,7 @@ import "server-only";
 
 import { headers } from "next/headers";
 import { configEnv } from "@/lib/config";
-import { getSession, updateTokens } from '@/lib/session';
+import { getSession, updateTokens } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 interface ApiProps {
@@ -79,7 +79,7 @@ export const api = async <T = any>(
         });
 
         if (!refreshResponse?.isError) {
-          await updateTokens(refreshResponse)
+          await updateTokens(refreshResponse);
           // If the refresh was successful, retry the original request
           return originalRequest(); // Recursive call to retry
         }

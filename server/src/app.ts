@@ -32,8 +32,9 @@ export class SetupServer {
     app.use(
       cors({
         origin: (requestOrigin, callback) => {
+
           const allowedOrigins = [config.CLIENT_URL!];
-          if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
+          if (requestOrigin && !allowedOrigins.includes(requestOrigin!)) {
             throw new ServerError('Request block by cors', 400);
           }
           callback(null, allowedOrigins); // allowedOrigin or true

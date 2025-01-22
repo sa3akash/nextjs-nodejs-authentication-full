@@ -21,8 +21,7 @@ export async function GET(req: NextRequest) {
     !name ||
     !role ||
     !email ||
-    !isVerified ||
-    !profilePicture
+    !isVerified
   )
     throw new Error("Google Ouath Failed!");
 
@@ -35,7 +34,7 @@ export async function GET(req: NextRequest) {
       name: name,
       _id: userId,
       isVerified: isVerified,
-      profilePicture: profilePicture,
+      profilePicture: profilePicture as string,
     },
   };
 

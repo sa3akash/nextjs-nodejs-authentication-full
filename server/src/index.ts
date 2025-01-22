@@ -2,6 +2,17 @@ import express from 'express';
 import { SetupServer } from '@root/app';
 import { config } from '@root/config';
 import { dbConnect } from '@root/dbConnect';
+import { IUserDocument } from '@root/modules/users/users.interface';
+
+declare global {
+  namespace Express {
+    interface Request {
+      // @ts-ignore
+      user: IUserDocument;
+      sessionId?: string;
+    }
+  }
+}
 
 class MainServer {
   public initialize() {

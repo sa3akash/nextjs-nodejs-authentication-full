@@ -12,8 +12,8 @@ export type SessionType = {
     name: string;
     email: string;
     role: Role;
-    profilePicture:string;
-    isVerified:string;
+    profilePicture: string;
+    isVerified: string;
   };
   accessToken: string;
   refreshToken: string;
@@ -61,8 +61,8 @@ export async function getSession() {
 }
 
 export async function deleteSession() {
-  const cookieStore = await cookies()
-  cookieStore.delete('session')
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
 }
 
 export async function updateTokens({
@@ -79,7 +79,7 @@ export async function updateTokens({
 
   const { payload } = await jwtVerify<SessionType>(cookie, encodedKey);
 
-  if (!payload) return null
+  if (!payload) return null;
 
   const newPayload: SessionType = {
     user: {

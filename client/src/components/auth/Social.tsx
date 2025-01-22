@@ -1,7 +1,9 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Icons } from "@/components/utils/icons";
 import Link from "next/link";
+import { cn } from '@/lib/utils';
+import { configEnv } from '@/lib/config';
 
 interface Props {
   type: "SignIn" | "SignUp";
@@ -18,10 +20,10 @@ const Social = ({ type }: Props) => {
             </span>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Button variant="outline" className="w-full">
+        <a href={`${configEnv.URL}/api/v1/auth/google/login`} className={cn(buttonVariants({variant: "outline"}),"w-full")}>
           <Icons.google />
           Login with Google
-        </Button>
+        </a>
         <Button variant="outline" className="w-full">
           <Icons.gitHub />
           Login with Github
