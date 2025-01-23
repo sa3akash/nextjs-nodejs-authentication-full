@@ -5,7 +5,7 @@ import { ServerError } from 'error-express';
 class JwtService {
   public signToken(data: { userId: string; sessionId?: string }, expire?: string): string {
     return jwt.sign(data, config.JWT_SECRET!, {
-      expiresIn: expire || '15m'
+      expiresIn: expire || '1m'
     });
   }
 

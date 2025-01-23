@@ -14,31 +14,7 @@ export const generateToken = (length: number) => {
   return token;
 };
 
-export const sendEmail = async (email: string, name: string, url: string) => {
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465, // 587
-    secure: true, // true for port 465, false for other ports
-    auth: {
-      user: config.SMS_EMAIL,
-      pass: config.SMS_EMAIL_PASS
-    }
-  });
-
-  try {
-    await transporter.sendMail({
-      from: `LMS 🔥 <${config.SMS_EMAIL}>`,
-      to: email,
-      subject: 'Email Verification Link',
-      html: `
-      <div style="display: flex; flex-direction: column; gap: 5px;">
-      <span>${name}</span>
-      <a href=${url} target="_blank"> link </a>
-</div>
-      
-      `
-    });
-  } catch {
-    throw new ServerError('Mail transport error:');
-  }
+export const stringToUint8Array = (str: string): Uint8Array => {
+  const encoder = new TextEncoder();
+  return encoder.encode(str);
 };

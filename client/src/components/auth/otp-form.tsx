@@ -16,11 +16,13 @@ import {
 } from "@/components/ui/form";
 import {
   InputOTP,
-  InputOTPGroup, InputOTPSeparator,
-  InputOTPSlot
-} from '@/components/ui/input-otp';
-import { REGEXP_ONLY_DIGITS } from 'input-otp';
-import { useRouter, useSearchParams } from 'next/navigation';
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { useRouter, useSearchParams } from "next/navigation";
+import { twoFaLogin } from "@/lib/actions/securityAction";
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
@@ -36,17 +38,19 @@ export function OtpVerifyForm() {
     },
   });
 
-
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    if(!email){
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    if (!email) {
       router.push("/signin");
+      return;
     }
 
-    console.log({email,code:data.pin});
+    const response = await twoFaLogin({ email, code: data.pin });
+
+    console.log(response);
   }
 
   return (
@@ -59,10 +63,7 @@ export function OtpVerifyForm() {
             <FormItem>
               <FormLabel>One-Time Password</FormLabel>
               <FormControl>
-                <InputOTP maxLength={6} {...field}
-                          pattern={REGEXP_ONLY_DIGITS}
-
-                >
+                <InputOTP maxLength={6} {...field} pattern={REGEXP_ONLY_DIGITS}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
                     <InputOTPSlot index={1} />

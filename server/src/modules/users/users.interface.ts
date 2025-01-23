@@ -15,8 +15,17 @@ export interface IUserDocument {
   twoFactorEnabled: boolean; // Is two-factor authentication enabled?
   twoFactorSecret: string; // Secret for 2FA (if enabled)
   resetToken: string; // Token for password reset
+  webauthnDevices: Array<{
+    id: string; // Credential ID
+    publicKey: string; // Base64 or Buffer-encoded public key
+    counter: number; // Signature counter
+    transports: AuthenticatorTransportFuture[]; // Authenticator transports (e.g., "usb", "ble")
+  }>;
+  challenge: string;
   resetTokenExpires: string | Date;
   isVerified: Date;
   comparePassword(password: string): Promise<boolean>;
   hashPassword(password: string): Promise<string>;
 }
+
+export type AuthenticatorTransportFuture = 'ble' | 'cable' | 'hybrid' | 'internal' | 'nfc' | 'smart-card' | 'usb';

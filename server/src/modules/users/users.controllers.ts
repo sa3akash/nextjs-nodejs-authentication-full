@@ -56,7 +56,6 @@ export class UsersController {
     const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });
 
     const url = `${config.CLIENT_URL}/api/auth?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${user?._id}&name=${user.name}&email=${user.email}&role=${user.role}&isVerified=${user.isVerified}&profilePicture=${user.profilePicture}`;
-
     res.redirect(url);
   }
 
@@ -67,7 +66,6 @@ export class UsersController {
     const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });
 
     const url = `${config.CLIENT_URL}/api/auth?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${user?._id}&name=${user.name}&email=${user.email}&role=${user.role}&isVerified=${user.isVerified}&profilePicture=${user.profilePicture}`;
-
     res.redirect(url);
   }
 
@@ -88,7 +86,7 @@ export class UsersController {
     const { token } = req.body;
 
     if (!token) {
-      throw new ServerError('Token is required', 400);
+      throw new ServerError('Token is required', 404);
     }
     const data = await usersService.refreshTokenGenerate(token);
 

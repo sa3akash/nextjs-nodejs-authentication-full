@@ -13,3 +13,4 @@ helm-charts
 .editorconfig
 .idea
 coverage*/src/app/(main)/page.tsx
+/src/lib/actions/twoFaAction.ts

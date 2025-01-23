@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ServerError } from 'error-express';
 import { userModel } from '@root/modules/users/users.model';
 import { jwtService } from '@services/utils/jwt.services';
+import jwt from 'jsonwebtoken';
 
 export type Role = 'admin' | 'moderator' | 'user';
 
@@ -13,6 +14,16 @@ export function auth(...roles: Role[]): MethodDecorator {
       const [req, res, next] = args as [Request, Response, NextFunction];
 
       const token = req.headers.authorization?.split(' ')[1] || req.cookies?.accessToken;
+
+
+      // const session = req.cookies.session;
+      //
+      // const dada = jwt.verify(session,"shu3ztVgn1wZpwu5LaZgNMEx/nWPeloj4hQNUJhhgHE=",{
+      //   algorithms: ['HS256'],
+      // })
+
+
+
 
       if (!token) {
         throw new ServerError('Unauthorized: No token provided', 404);

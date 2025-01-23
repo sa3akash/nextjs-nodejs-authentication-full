@@ -7,6 +7,7 @@ import { userModel } from '@root/modules/users/users.model';
 import qrcode from 'qrcode';
 import { usersService } from '@services/db/users.service';
 
+
 export class SecurityController {
   @auth()
   public async generate(req: Request, res: Response) {
@@ -20,7 +21,7 @@ export class SecurityController {
 
     if (!mfaSecret) {
       const secret = speakeasy.generateSecret({
-        name: `Auth - ${user.name}`,
+        name: 'Master Auth',
         issuer: 'http://localhost:5500'
       });
 
@@ -36,8 +37,8 @@ export class SecurityController {
     const url = speakeasy.otpauthURL({
       secret: mfaSecret,
       encoding: 'base32',
-      label: `MA-${user?.name}`,
-      issuer: 'http://localhost:5500'
+      label: `MA-${user?.name}`
+      // issuer: 'http://localhost:5500'
     });
     const qrcodeImage = await qrcode.toDataURL(url);
 
@@ -125,9 +126,7 @@ export class SecurityController {
       throw new ServerError('All are required', 400);
     }
 
-    const user = await userModel.findOne({
-      $or: [{ _id: email }, { email: email }]
-    });
+    const user = await userModel.findOne({ email });
 
     if (!user) {
       throw new ServerError('User not found', 404);
@@ -148,4 +147,6 @@ export class SecurityController {
 
     res.status(200).json(data);
   }
+
+
 }

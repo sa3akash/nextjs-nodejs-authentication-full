@@ -53,6 +53,18 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
       type: Boolean,
       default: false
     },
+    challenge: {
+      type: String,
+      default: null
+    },
+    webauthnDevices: [
+      {
+        id: { type: String, required: true },
+        publicKey: { type: String, required: true },
+        counter: { type: Number, required: true },
+        transports: { type: [String], default: [] },
+      }
+    ],
     twoFactorSecret: {
       type: String,
       default: null
