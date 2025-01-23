@@ -24,6 +24,9 @@ export const updateUser = async () => {
     console.log("updateUser", data);
 
     if (data.status === "error") {
+      if(data.statusCode === 401){
+        await deleteSession()
+      }
       return null;
     }
 

@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { startRegistration } from "@simplewebauthn/browser";
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
 import {
-  registerWebAuthRegister,
-  verifyWebAuthRegister,
-} from "@/lib/actions/fetchCall";
+  registerWebAuthRegister, startAuthenticationAction, verifyAuthenticationAction,
+  verifyWebAuthRegister
+} from '@/lib/actions/fetchCall';
 
 const WebAuth = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -37,12 +37,35 @@ const WebAuth = () => {
 
     }
   };
+  
+  const handleStartAuthentication = async () => {
+  const options = await startAuthenticationAction()
+    console.log({ options });
+
+    const authenticationResponse = await startAuthentication({
+      optionsJSON: options,
+      // useBrowserAutofill: true,
+      // verifyBrowserAutofillInput: true,
+
+    });
+
+    console.log({ authenticationResponse });
+
+
+    const result = await verifyAuthenticationAction(authenticationResponse)
+
+    console.log(result);
+
+  }
 
   return (
     <div>
       <h1>Web auth</h1>
       <Button disabled={loading} onClick={handleWebAuthRegister}>
         {loading ? "Loading ..." : "Register WebAuth"}
+      </Button>
+      <Button onClick={handleStartAuthentication}>
+        start authentication
       </Button>
     </div>
   );

@@ -4,81 +4,74 @@ import { FormState, LoginFormSchema, SignupFormSchema } from "@/lib/types";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api";
 import { createSession, deleteSession } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 
 export const signUpAction = async (
   state: FormState,
   formData: FormData,
 ): Promise<FormState> => {
-  try {
-    const validationFields = SignupFormSchema.safeParse({
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
+  const validationFields = SignupFormSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
 
-    if (!validationFields.success) {
-      return {
-        error: validationFields.error.flatten().fieldErrors,
-      };
-    }
-
-    const data = await api("/auth/signup", {
-      method: "POST",
-      body: JSON.stringify(validationFields.data),
-    });
-
-    if (data.status !== "error") {
-      return {
-        message: data.message,
-        success: true,
-      };
-    }
+  if (!validationFields.success) {
     return {
-      message: data.message || "Something went wrong.",
+      error: validationFields.error.flatten().fieldErrors,
     };
-  } catch (err) {
-    console.log(JSON.stringify(err, null, 2));
   }
+
+  const data = await api("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(validationFields.data),
+  });
+
+  if (data.status !== "error") {
+    return {
+      message: data.message,
+      success: true,
+    };
+  }
+  return {
+    message: data.message || "Something went wrong.",
+  };
 };
 
 export const signInAction = async (
   state: FormState,
   formData: FormData,
 ): Promise<FormState> => {
-  try {
-    const validatedFields = LoginFormSchema.safeParse({
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
-    if (!validatedFields.success) {
-      return {
-        error: validatedFields.error.flatten().fieldErrors,
-      };
-    }
-
-    const data = await api("/auth/signin", {
-      method: "POST",
-      body: JSON.stringify(validatedFields.data),
-    });
-
-    if (data.status !== "error") {
-      await createSession(data);
-      redirect("/feed");
-    }
+  const validatedFields = LoginFormSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!validatedFields.success) {
     return {
-      message: data.message,
+      error: validatedFields.error.flatten().fieldErrors,
     };
-  } catch (err) {
-    console.log(JSON.stringify(err, null, 2));
   }
+
+  const data = await api("/auth/signin", {
+    method: "POST",
+    body: JSON.stringify(validatedFields.data),
+  });
+
+  console.log(data);
+
+
+  if (data?.user?._id) {
+    await createSession(data);
+
+    redirect("/feed");
+  }
+  return {
+    message: data.message,
+  };
 };
 
 export const sigOutAction = async () => {
-  try {
-    await deleteSession();
+  await deleteSession();
 
-    redirect("/signin");
-  } catch (err) {
-    console.log(JSON.stringify(err, null, 2));
-  }
+  redirect("/signin");
 };

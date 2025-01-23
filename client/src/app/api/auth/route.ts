@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
     refreshToken,
   });
 
+
   return NextResponse.json(
     {
       message: "All updated",
@@ -87,7 +88,13 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  await deleteSession();
+
+  console.log("runing....");
+
+
+ await deleteSession();
+
+
 
   return NextResponse.json(
     {

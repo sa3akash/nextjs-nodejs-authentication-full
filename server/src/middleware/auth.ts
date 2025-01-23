@@ -23,8 +23,6 @@ export function auth(...roles: Role[]): MethodDecorator {
       // })
 
 
-
-
       if (!token) {
         throw new ServerError('Unauthorized: No token provided', 404);
       }

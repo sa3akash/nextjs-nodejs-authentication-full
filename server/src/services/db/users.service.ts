@@ -61,7 +61,7 @@ class UsersService {
     if (!user.isVerified) {
       const jwtToken = jwtService.signVerifyToken({ userId: `${user._id}` });
 
-      const template: string = emailTemplates.verifyEmail(config.CLIENT_URL+ '/verify?token=' + jwtToken);
+      const template: string = emailTemplates.verifyEmail(`${config.CLIENT_URL}/verify?token=${jwtToken}`);
 
       emailQueue.sendEmail('sendEmail', {
         receiverEmail: user.email,
@@ -101,7 +101,7 @@ class UsersService {
     if (!payload) throw new ServerError('Invalid token', 401);
 
     const user = await userModel.findById(payload.userId);
-    if (!user) throw new ServerError('User does not exist', 404);
+    if (!user) throw new ServerError('User does not exist', 401);
 
     const accessToken = jwtService.signToken({ userId: `${user._id}` });
     const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });

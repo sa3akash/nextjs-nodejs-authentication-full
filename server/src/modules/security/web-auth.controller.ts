@@ -115,6 +115,7 @@ export class AuthenticationController {
 
     const options = await generateAuthenticationOptions(opts);
 
+
     // Save the challenge to the user's record
     await userModel.findByIdAndUpdate(user._id, {
       $set: {

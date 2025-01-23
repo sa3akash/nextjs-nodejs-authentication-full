@@ -78,7 +78,7 @@ export class UsersController {
   @auth()
   public async getUser(req: Request, res: Response) {
     const data = await usersService.getUserById(`${(req.user as any)?._id}`);
-
+    res.clearCookie('session')
     res.status(200).json(data);
   }
 
