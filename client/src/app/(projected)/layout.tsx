@@ -4,7 +4,7 @@ import Navbar from "@/components/navbar";
 const Layout = ({ children }: PropsWithChildren) => {
   return (
       <div>
-        <Navbar />
+        <Navbar/>
         {children}
       </div>
   );

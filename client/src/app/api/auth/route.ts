@@ -1,6 +1,6 @@
 import { createSession, Role, SessionType } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -22,8 +22,12 @@ export async function GET(req: NextRequest) {
     !role ||
     !email ||
     !isVerified || !profilePicture
-  )
-    throw new Error("Google Ouath Failed!");
+  ){
+    return redirect("/signin?error=oauth login failed");
+    // return NextResponse.json({error: 'failed to login'},{status:403})
+    // throw new Error("Google Ouath Failed!");
+  }
+
 
   const sessionData: SessionType = {
     accessToken: accessToken,

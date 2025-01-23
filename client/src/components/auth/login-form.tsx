@@ -3,30 +3,34 @@
 import { GalleryVerticalEnd } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import Social from "@/components/auth/Social";
 import AuthButton from "@/components/auth/AuthButton";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { signInAction } from '@/lib/actions/signup';
+import { signInAction } from "@/lib/actions/signup";
+import { useSearchParams } from "next/navigation";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [state, loginAction, pending] = useFormState(signInAction, undefined);
+  const searchParams = useSearchParams();
+  const oauthError = searchParams.get("error");
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       {state?.message && (
-        <p className={cn("text-sm text-red-500",
-          {
-            "text-green-400": state.success
-          }
-        )}>{state.message}</p>
+        <p
+          className={cn("text-sm text-red-500", {
+            "text-green-400": state.success,
+          })}
+        >
+          {state.message}
+        </p>
       )}
 
       <form action={loginAction}>
@@ -65,12 +69,12 @@ export function LoginForm({
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <a
-                  href="#"
+                <Link
+                  href='/forgot'
                   className="ml-auto text-sm underline-offset-2 hover:underline"
                 >
                   Forgot your password?
-                </a>
+                </Link>
               </div>
               <Input
                 id="password"
@@ -84,8 +88,10 @@ export function LoginForm({
               <p className="text-sm text-red-500">{state.error.password}</p>
             )}
 
-
-            <AuthButton type="SignIn" />
+            <AuthButton>Login</AuthButton>
+            {oauthError && (
+              <p className="capitalize text-red-500">{oauthError}</p>
+            )}
           </div>
           <Social type="SignIn" />
         </div>

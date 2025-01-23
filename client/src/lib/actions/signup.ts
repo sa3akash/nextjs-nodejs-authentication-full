@@ -1,12 +1,9 @@
 "use server";
 
 import { FormState, LoginFormSchema, SignupFormSchema } from "@/lib/types";
-import { configEnv } from "@/lib/config";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { api } from "@/lib/api";
 import { createSession, deleteSession } from "@/lib/session";
-import { revalidatePath } from "next/cache";
 
 export const signUpAction = async (
   state: FormState,
@@ -71,6 +68,6 @@ export const signInAction = async (
 export const sigOutAction = async () => {
   await deleteSession();
 
-  revalidatePath("/");
+  // revalidatePath("/");
   redirect("/signin");
 };

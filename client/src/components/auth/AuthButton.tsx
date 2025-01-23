@@ -1,14 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 
-interface Props {
-  type: "SignIn" | "SignUp";
-}
-
-const AuthButton = ({ type }: Props) => {
+const AuthButton = ({ children }: PropsWithChildren) => {
   const { pending } = useFormStatus();
   return (
     <Button
@@ -17,7 +13,7 @@ const AuthButton = ({ type }: Props) => {
       disabled={pending}
       aria-disabled={pending}
     >
-      {pending ? "Loading..." : type === "SignIn" ? "Login" : "Register"}
+      {pending ? "Loading..." : children}
     </Button>
   );
 };

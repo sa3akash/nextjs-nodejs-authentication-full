@@ -3,6 +3,7 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import { updateUser } from '@/lib/actions/updateUser';
 import { useAuth } from '@/lib/store/useAuth';
+import { Toaster } from "@/components/ui/toaster"
 
 const RootProviders = ({children}:PropsWithChildren) => {
   const {setLoading,setSession} = useAuth()
@@ -14,7 +15,10 @@ const RootProviders = ({children}:PropsWithChildren) => {
     });
   },[])
   return (
-    <>{children}</>
+    <>
+      {children}
+      <Toaster />
+    </>
   );
 };
 export default RootProviders;

@@ -2,7 +2,7 @@ import "server-only";
 
 import { headers } from "next/headers";
 import { configEnv } from "@/lib/config";
-import { getSession, updateTokens } from "@/lib/session";
+import { deleteSession, getSession, updateTokens } from "@/lib/session";
 
 interface ApiProps {
   body?: BodyInit | null;
@@ -48,6 +48,8 @@ export const requestApi = async <T = any>(
 
   const data = await response.json();
 
+  console.log({ data });
+
   if (!response.ok) {
     return {
       ...data,
@@ -62,12 +64,14 @@ export const requestApi = async <T = any>(
 export const api = async <T = any>(
   url: string,
   options: ApiProps,
+  retryCount = 0, // Track the number of retries
+  maxRetries = 1, // Set a max retry limit
 ): Promise<FetchError | T> => {
   const originalRequest = async (): Promise<T | FetchError> => {
     const originalResponse = await requestApi(url, options); // Use generic <T>
 
     if (originalResponse.isError) {
-      if (originalResponse.statusCode === 401) {
+      if (originalResponse.statusCode === 401 && retryCount < maxRetries) {
         const session = await getSession();
         // Attempt to refresh the token if we get a 401
         const refreshResponse = await requestApi("/auth/refresh", {
@@ -78,14 +82,16 @@ export const api = async <T = any>(
 
         if (!refreshResponse?.isError) {
           await updateTokens(refreshResponse);
-          // If the refresh was successful, retry the original request
-          return originalRequest(); // Recursive call to retry
+          // Increment retry count and retry the original request
+          return api<T>(url, options, retryCount + 1, maxRetries); // Pass increased retry count
+        } else {
+          // Handle scenarios where the refresh fails
+          if (refreshResponse.statusCode === 401) {
+            await deleteSession(); // Log out if the refresh token is invalid
+          }
+          return refreshResponse as FetchError; // Return refresh failure
         }
-
-        // Optionally, handle scenarios where the refresh failed
-        return refreshResponse as FetchError;
       }
-
       return originalResponse; // Return the original error response
     }
 

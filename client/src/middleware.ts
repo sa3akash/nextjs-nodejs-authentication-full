@@ -23,13 +23,13 @@ export default async function middleware(req: NextRequest) {
   }
 
   // 5. Redirect to /dashboard if the user is authenticated
-  // if (
-  //   isPublicRoute &&
-  //   session?.user._id &&
-  //   !req.nextUrl.pathname.startsWith('/feed')
-  // ) {
-  //   return NextResponse.redirect(new URL('/feed', req.nextUrl))
-  // }
+  if (
+    isPublicRoute &&
+    session?.user._id &&
+    !req.nextUrl.pathname.startsWith('/feed')
+  ) {
+    return NextResponse.redirect(new URL('/feed', req.nextUrl))
+  }
 
   // if(path === '/admin' && session?.user.role !== 'admin'){
   //   return NextResponse.redirect(new URL('/feed', req.nextUrl))

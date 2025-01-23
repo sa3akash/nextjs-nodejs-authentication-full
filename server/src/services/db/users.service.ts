@@ -5,6 +5,7 @@ import { emailQueue } from '@services/queues/emailQueue';
 import { emailTemplates } from '@services/mailers';
 import { jwtService } from '@services/utils/jwt.services';
 import { Request } from 'express';
+import { config } from '@root/config';
 
 class UsersService {
   public async getUserById(id: string): Promise<IUserDocument | null> {
@@ -40,7 +41,7 @@ class UsersService {
 
     const user = await this.getUserById(payload.userId);
 
-    if(user?.isVerified){
+    if (user?.isVerified) {
       throw new ServerError('User already verified', 400);
     }
 
@@ -53,14 +54,14 @@ class UsersService {
 
   public async loginUser(req: Request) {
     const user = await this.getUserByEmail(req.body.email);
-    if (!user || !(await user.comparePassword(req.body.password))) {
-      throw new ServerError('Invalid credentials', 400);
+    if (!user) {
+      throw new ServerError('Invalid User', 400);
     }
 
     if (!user.isVerified) {
       const jwtToken = jwtService.signVerifyToken({ userId: `${user._id}` });
 
-      const template: string = emailTemplates.verifyEmail('https://localhost:3000/verify?token=' + jwtToken);
+      const template: string = emailTemplates.verifyEmail(config.CLIENT_URL+ '/verify?token=' + jwtToken);
 
       emailQueue.sendEmail('sendEmail', {
         receiverEmail: user.email,
@@ -74,9 +75,8 @@ class UsersService {
       };
     }
 
-    const ip = req.ip || req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-    const userAgent = req.headers["user-agent"];
-
+    const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const userAgent = req.headers['user-agent'];
 
     const accessToken = jwtService.signToken({ userId: `${user._id}` });
     const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });
@@ -85,7 +85,7 @@ class UsersService {
       user: {
         _id: user._id,
         name: user.name,
-        email:user.email,
+        email: user.email,
         isVerified: user.isVerified,
         role: user.role,
         profilePicture: user.profilePicture
@@ -101,7 +101,7 @@ class UsersService {
     if (!payload) throw new ServerError('Invalid token', 401);
 
     const user = await userModel.findById(payload.userId);
-    if(!user) throw new ServerError('User does not exist', 404);
+    if (!user) throw new ServerError('User does not exist', 404);
 
     const accessToken = jwtService.signToken({ userId: `${user._id}` });
     const refreshToken = jwtService.signTokenRefresh({ userId: `${user._id}` });
@@ -109,7 +109,7 @@ class UsersService {
     return {
       accessToken,
       refreshToken
-    }
+    };
   }
 }
 

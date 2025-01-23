@@ -79,15 +79,9 @@ export function RegisterForm({
             )}
 
             <div className="grid gap-2">
-              <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <a
-                  href="#"
-                  className="ml-auto text-sm underline-offset-2 hover:underline"
-                >
-                  Forgot your password?
-                </a>
-              </div>
+
+
               <Input
                 id="password"
                 type="password"
@@ -106,7 +100,7 @@ export function RegisterForm({
                 </ul>
               </div>
             )}
-            <AuthButton type="SignUp" />
+            <AuthButton>Register</AuthButton>
           </div>
           <Social type="SignUp" />
         </div>

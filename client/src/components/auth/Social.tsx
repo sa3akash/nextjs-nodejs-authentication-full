@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { configEnv } from '@/lib/config';
 
 interface Props {
-  type: "SignIn" | "SignUp";
+  type?: "SignIn" | "SignUp";
 }
 
 const Social = ({ type }: Props) => {
@@ -32,20 +32,24 @@ const Social = ({ type }: Props) => {
         </a>
       </div>
 
-      {type === 'SignIn' ? (
-        <div className="text-center text-sm">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="underline underline-offset-4">
-            Sign up
-          </Link>
-        </div>
-      ) : (
-        <div className="text-center text-sm">
-          Already have an account?{" "}
-          <Link href="/signin" className="underline underline-offset-4">
-            Sign in
-          </Link>
-        </div>
+      {type && (
+        <>
+          {type === 'SignIn' ? (
+            <div className="text-center text-sm">
+              Don&apos;t have an account?{' '}
+              <Link href="/signup" className="underline underline-offset-4">
+                Sign up
+              </Link>
+            </div>
+          ) : (
+            <div className="text-center text-sm">
+              Already have an account?{" "}
+              <Link href="/signin" className="underline underline-offset-4">
+                Sign in
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </>
   );

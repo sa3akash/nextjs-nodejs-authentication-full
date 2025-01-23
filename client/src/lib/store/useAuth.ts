@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { SessionType } from "@/lib/session";
-import { persist, createJSONStorage } from "zustand/middleware";
+// import { persist, createJSONStorage } from "zustand/middleware";
 
 interface AuthState {
   session: SessionType | null;
-  setSession: (data: SessionType) => void;
+  setSession: (data: SessionType | null) => void;
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
 }
 
 export const useAuth = create<AuthState>((set, get) => ({
-  loading: false,
+  loading: true,
   setLoading: (isLoading) => set((state) => ({ loading: isLoading })),
   session: null,
   setSession: (data: SessionType | null) => set((state) => ({ session: data })),

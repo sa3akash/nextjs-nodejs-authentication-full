@@ -6,7 +6,6 @@ import {
   getSession,
   SessionType,
 } from "@/lib/session";
-import { redirect } from "next/navigation";
 import { api } from "@/lib/api";
 
 export const updateUser = async () => {
@@ -21,11 +20,11 @@ export const updateUser = async () => {
     },
   });
 
+
+  console.log({data});
+
+
   if (data.isError) {
-    if (data.statusCode === 401) {
-      redirect("/signin");
-    }
-    await deleteSession();
     return null;
   }
 

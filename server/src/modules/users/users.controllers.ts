@@ -32,6 +32,18 @@ export class UsersController {
 
   @joiValidation(SignInSchema)
   public async login(req: Request, res: Response) {
+    const user = await usersService.getUserByEmail(req.body.email);
+    if (!user || !(await user.comparePassword(req.body.password))) {
+      throw new ServerError('Invalid credentials', 400);
+    }
+
+    if (user.twoFactorEnabled) {
+      res.status(200).json({
+        status: 'success',
+        message: 'Check your 2 factor app for verification'
+      });
+    }
+
     const data = await usersService.loginUser(req);
 
     res.status(200).json(data);
@@ -72,9 +84,9 @@ export class UsersController {
     res.status(200).json(data);
   }
 
-  @auth()
   public async refresh(req: Request, res: Response) {
     const { token } = req.body;
+
     if (!token) {
       throw new ServerError('Token is required', 400);
     }

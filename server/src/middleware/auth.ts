@@ -15,7 +15,7 @@ export function auth(...roles: Role[]): MethodDecorator {
       const token = req.headers.authorization?.split(' ')[1] || req.cookies?.accessToken;
 
       if (!token) {
-        throw new ServerError('Unauthorized: No token provided', 401);
+        throw new ServerError('Unauthorized: No token provided', 404);
       }
 
       const tokenUser = jwtService.verifyToken(token) as { userId: string };
@@ -27,7 +27,7 @@ export function auth(...roles: Role[]): MethodDecorator {
       const userInDB = await userModel.findById(tokenUser.userId);
 
       if (!userInDB) {
-        throw new ServerError('Unauthorized: User not found', 404);
+        throw new ServerError('Unauthorized: User not found', 401);
       }
 
       req.user = userInDB;
