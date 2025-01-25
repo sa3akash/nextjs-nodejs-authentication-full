@@ -10,7 +10,7 @@ export default function Home() {
 
   if(loading){
     return (
-      <h1>
+      <h1 className="">
         Loading...
       </h1>
     )

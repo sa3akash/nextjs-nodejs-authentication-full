@@ -32,30 +32,34 @@ type FetchError = {
 // =======================================================================
 
 export const api = async (url: string, options: ApiProps) => {
-  const session = await getSession();
+  try {
+    const session = await getSession();
 
-  let response = await apiCall(url, options);
+    let response = await apiCall(url, options);
 
-  if (response?.statusCode === 401) {
-    const newAccessToken = await apiCall("/auth/refresh", {
-      method: "POST",
-      body: JSON.stringify({ token: session?.refreshToken }),
-    });
-
-    if (newAccessToken.status !== "error") {
-      await updateSession({ ...newAccessToken });
-      response = await apiCall(url, {
-        ...options,
-        headers: {
-          authorization: `Bearer ${newAccessToken.accessToken}`,
-        },
+    if (response?.statusCode === 401) {
+      const newAccessToken = await apiCall("/auth/refresh", {
+        method: "POST",
+        body: JSON.stringify({ token: session?.refreshToken }),
       });
-    } else {
-      await deleteSession();
-    }
-  }
 
-  return response;
+      if (newAccessToken.status !== "error") {
+        await updateSession({ ...newAccessToken });
+        response = await apiCall(url, {
+          ...options,
+          headers: {
+            authorization: `Bearer ${newAccessToken.accessToken}`,
+          },
+        });
+      } else {
+        await deleteSession();
+      }
+    }
+
+    return response;
+  }catch(err){
+    return null
+  }
 };
 
 const apiCall = async (url: string, options: ApiProps) => {
